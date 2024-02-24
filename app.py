@@ -9,6 +9,7 @@ def predict():
     # Get input features from request
     risk_score = 0.0
     data = request.json
+    print(data)
     if data:
         KIDSDRIV = data['KIDSDRIV']
         AGE = data['AGE']
