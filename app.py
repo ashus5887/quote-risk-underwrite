@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def predict():
+    print(request)
     # Get input features from request
     risk_score = 0.0
     data = request.json
