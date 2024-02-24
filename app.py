@@ -3,11 +3,11 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/predict', methods=['GET'])
 def predict():
     print(request)
     # Get input features from request
-    risk_score = 0.0
+    risk_score = 4
     # data = request.json
     # print(data)
     # if data:
