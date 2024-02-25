@@ -1,67 +1,54 @@
-import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from imblearn.under_sampling import RandomUnderSampler
-from xgboost.testing.data import joblib
+from src import data_prep
 
-# Read the dataset
-data = pd.read_csv("../data/car_insurance_claim.csv")
+def prep_data(path:str):
+    data = pd.read_csv(path)
+    X = data[['AGE', 'YOJ', 'INCOME', 'TRAVTIME', 'CAR_USE', 'BLUEBOOK', 'CAR_TYPE', 'RED_CAR', 'CAR_AGE', 'URBANICITY', 'MVR_PTS']]
+    y = data['RISK_VALUE']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=12, shuffle=True)
+    data_prep.scale_numeric_data(X, X_train, X_test)
+    data_prep.encode_categorical_data(X, X_train, X_test)
+    X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled = data_prep.undersample_data(X_train, X_test, y_train, y_test)
+    return X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled
 
-# Clean the data
-# Remove the $ symbol
-cols = ['INCOME', 'HOME_VAL', 'OLDCLAIM', 'CLM_AMT', 'BLUEBOOK']
-for col in cols:
-    data[col] = data[col].str.replace(',', '').str.replace('$', '').astype('float')
+def log_reg(X_train_resampled, y_train_resampled):
+    model = LogisticRegression(max_iter=500)
+    model.fit(X_train_resampled, y_train_resampled)
+    return model
 
-# Remove '_z' attached to the data
-for col in data.columns:
-    if(data[col].dtype == "object"):
-        data[col] = data[col].str.replace('z_', '')
+def train_model(path:str):
+    X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled = prep_data(path)
+    model = log_reg(X_train_resampled, y_train_resampled)
+    print("model trained")
+    y_pred = model.predict(X_test_resampled)
 
-# Fill empty values
-data.fillna(data.mode().iloc[0], inplace=True)
+    # Evaluate the model
+    accuracy = accuracy_score(y_test_resampled, y_pred)
+    print("Accuracy:", accuracy)
 
-# Split data
-X = data[['KIDSDRIV', 'AGE', 'HOMEKIDS', 'YOJ', 'INCOME', 'PARENT1', 'HOME_VAL', 'MSTATUS', 'GENDER', 'EDUCATION', 'OCCUPATION', 'TRAVTIME', 'CAR_USE', 'BLUEBOOK', 'TIF', 'CAR_TYPE', 'RED_CAR', 'OLDCLAIM', 'CLM_FREQ', 'REVOKED', 'MVR_PTS', 'CLM_AMT', 'CAR_AGE', 'URBANICITY']]
-y = data['CLAIM_FLAG']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=12, shuffle=True)
+    # Additional evaluation metrics
+    print("Classification Report:")
+    print(classification_report(y_test_resampled, y_pred))
 
-# Scaling the numeric features
-numeric_features = []
-for col in X.columns:
-    if(X[col].dtype == "float" or X[col].dtype == "int"):
-        numeric_features.append(col)
-scaler = StandardScaler()
-X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
-X_test[numeric_features] = scaler.fit_transform(X_test[numeric_features])
-
-# Encoding the categorical features
-categorical_features = X.select_dtypes(include=['object']).columns
-encoder = LabelEncoder()
-for col in categorical_features:
-    X_train[col] = encoder.fit_transform(X_train[col])
-    X_test[col] = encoder.fit_transform(X_test[col])
-
-# undersampling the data
-undersample = RandomUnderSampler(sampling_strategy='majority')
-X_train_resampled, y_train_resampled = undersample.fit_resample(X_train, y_train)
-X_test_resampled, y_test_resampled = undersample.fit_resample(X_test, y_test)
-
-# LOGISTIC REGRESSION
-# Initialize and fit the logistic regression model
-model = LogisticRegression(max_iter=50)
-model.fit(X_train_resampled, y_train_resampled)
-joblib.dump(model, 'trained_model.pkl')
+    print("Confusion Matrix:")
+    print(confusion_matrix(y_test_resampled, y_pred))
+    return model
 
 
-# Convert to probabilities
-probs = model.predict_proba(X_test)[:, 1]
+if __name__ == "__main__":
+    model = train_model("../data/final_dataset.csv")
 
-# Rescale probabilities to range from 1 to 10
-risk_scores = (probs * 2) + 1
 
-# Convert risk_scores to integer values
-risk_scores = np.round(risk_scores).astype(int)
-result_df = pd.DataFrame({'Risk_Score': risk_scores})
+
+# # Convert to probabilities
+# probs = model.predict_proba(X_test)[:, 1]
+#
+# # Rescale probabilities to range from 1 to 10
+# risk_scores = (probs * 2) + 1
+#
+# # Convert risk_scores to integer values
+# risk_scores = np.round(risk_scores).astype(int)
+# result_df = pd.DataFrame({'Risk_Score': risk_scores})
