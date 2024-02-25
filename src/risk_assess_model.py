@@ -71,9 +71,9 @@ def get_risk_factor(X_input):
     else:
         X_input[0][7] = 2
 
-    if (X_input[0][10] == 'Highly Rural/ Rural'):
+    if (X_input[0][10] == 'Rural'):
         X_input[0][10] = 0
-    elif (X_input[0][10] == 'Highly Urban/ Urban'):
+    elif (X_input[0][10] == 'Urban'):
         X_input[0][10] = 1
     else:
         X_input[0][10] = 2
@@ -82,8 +82,8 @@ def get_risk_factor(X_input):
     risk_factor = 10 if risk_factor >= 10 else risk_factor
     return int(risk_factor)
 
-
-if __name__ == '__main__':
-    # X = [[46.0, 12.0, '$43,501', 60, 'Private', '$16,080', 'Minivan', 'no', 2, 1.0, 'Highly Rural/ Rural']]
-    X = [[60.0, 50.0, '$10,000', 20, 'Private', '$5,000', 'Van', 'yes', 1, 10.0, 'Highly Urban/ Urban']]
-    print(get_risk_factor(X))
+#
+# if __name__ == '__main__':
+#     # X = [[46.0, 12.0, '$43,501', 60, 'Private', '$16,080', 'Minivan', 'no', 2, 1.0, 'Highly Rural/ Rural']]
+#     X = [[60.0, 50.0, '$10,000', 20, 'Private', '$5,000', 'Van', 'yes', 1, 10.0, 'Highly Urban/ Urban']]
+#     print(get_risk_factor(X))

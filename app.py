@@ -17,7 +17,7 @@ def predict():
     redcar = str(request.args.get('redcar'))
     mvrpts = int(request.args.get('mvrpts'))
     carage = float(request.args.get('carage'))
-    urbanicity = str(unquote(request.args.get('urbanicity')))
+    urbanicity = str(request.args.get('urbanicity'))
     X_input = [[age, yoj, income, travtime, caruse, bluebook, cartype, redcar, mvrpts, carage, urbanicity]]
     risk_score = risk_assess_model.get_risk_factor(X_input)
     return jsonify({'risk_score': risk_score})
