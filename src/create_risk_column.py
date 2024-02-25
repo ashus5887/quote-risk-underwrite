@@ -93,14 +93,14 @@ def calculate_risk_redcar(redcar, risk):
     return risk
 
 def calculate_risk_carage(carage, risk):
-    if carage <= 5:
+    if carage <= 10:
+        risk += 0
+    elif 10 > carage <= 20:
         risk += 1
-    elif 5 > carage <= 10:
+    elif 20 > carage <= 30:
         risk += 2
-    elif 10 > carage <= 15:
+    elif carage > 30:
         risk += 3
-    elif carage > 15:
-        risk += 4
     else:
         risk += 0
     return risk
