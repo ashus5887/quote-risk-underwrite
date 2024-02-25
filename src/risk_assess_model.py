@@ -1,3 +1,5 @@
+import os
+
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
@@ -31,7 +33,10 @@ def train_model(path: str):
 
 
 def get_risk_factor(X_input):
-    model = train_model("../data/final_dataset.csv")
+    current_directory = os.path.dirname(__file__)
+    data_directory = os.path.join(current_directory, '..', 'data')
+    csv_file_path = os.path.join(data_directory, 'final_dataset.csv')
+    model = train_model(csv_file_path)
 
     currency_values = [2, 5]
     for val in currency_values:
@@ -78,7 +83,7 @@ def get_risk_factor(X_input):
     return int(risk_factor)
 
 
-# if __name__ == '__main__':
-#     # X = [[46.0, 12.0, '$43,501', 60, 'Private', '$16,080', 'Minivan', 'no', 2, 1.0, 'Highly Rural/ Rural']]
-#     X = [[60.0, 50.0, '$10,000', 20, 'Private', '$5,000', 'Van', 'yes', 1, 10.0, 'Highly Urban/ Urban']]
-#     print(get_risk_factor(X))
+if __name__ == '__main__':
+    # X = [[46.0, 12.0, '$43,501', 60, 'Private', '$16,080', 'Minivan', 'no', 2, 1.0, 'Highly Rural/ Rural']]
+    X = [[60.0, 50.0, '$10,000', 20, 'Private', '$5,000', 'Van', 'yes', 1, 10.0, 'Highly Urban/ Urban']]
+    print(get_risk_factor(X))
