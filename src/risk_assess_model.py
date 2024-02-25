@@ -15,7 +15,7 @@ def prep_data(path:str):
     return X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled
 
 def log_reg(X_train_resampled, y_train_resampled):
-    model = LogisticRegression(max_iter=500)
+    model = LogisticRegression(max_iter=1000)
     model.fit(X_train_resampled, y_train_resampled)
     return model
 
@@ -38,9 +38,10 @@ def train_model(path:str):
     print(confusion_matrix(y_test_resampled, y_pred))
     return model
 
-if __name__ == "__main__":
+def get_risk_factor(X_input):
     model = train_model("../data/final_dataset.csv")
-
+    risk_factor = model.predict(X_input)
+    return risk_factor
 
 
 # # Convert to probabilities
