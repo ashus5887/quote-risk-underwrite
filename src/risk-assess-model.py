@@ -22,7 +22,8 @@ def log_reg(X_train_resampled, y_train_resampled):
 def train_model(path:str):
     X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled = prep_data(path)
     model = log_reg(X_train_resampled, y_train_resampled)
-    print("model trained")
+
+    # Test Model
     y_pred = model.predict(X_test_resampled)
 
     # Evaluate the model
@@ -36,7 +37,6 @@ def train_model(path:str):
     print("Confusion Matrix:")
     print(confusion_matrix(y_test_resampled, y_pred))
     return model
-
 
 if __name__ == "__main__":
     model = train_model("../data/final_dataset.csv")

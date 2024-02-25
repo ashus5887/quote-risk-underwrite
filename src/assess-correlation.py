@@ -1,7 +1,5 @@
-import os
-
 import pandas as pd
-from src.utils import data_prep
+from src import data_prep
 
 def prep_data(path:str):
     data = data_prep.clean_data(path, ['INCOME', 'HOME_VAL', 'OLDCLAIM', 'CLM_AMT', 'BLUEBOOK'])
@@ -10,11 +8,7 @@ def prep_data(path:str):
     return df
 
 def assess_correlation():
-    current_dir = os.getcwd()
-    folder = os.path.abspath(os.path.join(current_dir, '..', '..'))
-    file_name = 'raw_dataset.csv'
-    file_path = os.path.join(folder, file_name)
-    df = prep_data(file_path)
+    df = prep_data("../data/raw_dataset.csv")
     correlation = df.corr()['CLAIM_FLAG'].sort_values(ascending=False)
     # Print column names with correlation values
     for column, corr_value in correlation.items():
