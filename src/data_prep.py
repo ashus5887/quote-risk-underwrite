@@ -1,7 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def clean_data(path:str, currency_columns:list):
+
+def clean_data(path: str, currency_columns: list):
     data = pd.read_csv(path)
 
     # Clean the data
@@ -12,7 +13,7 @@ def clean_data(path:str, currency_columns:list):
 
     # Remove '_z' attached to the data
     for col in data.columns:
-        if(data[col].dtype == "object"):
+        if (data[col].dtype == "object"):
             data[col] = data[col].str.replace('z_', '')
 
     # Fill empty values
@@ -20,7 +21,8 @@ def clean_data(path:str, currency_columns:list):
 
     return data
 
-def encode_categorical_data(path:str):
+
+def encode_categorical_data(path: str):
     data = pd.read_csv(path)
 
     car_type_map = {'Minivan': 0, 'Panel Truck': 1, 'Pickup': 2, 'Sports Car': 3, 'SUV': 4, 'Van': 5}
@@ -35,15 +37,15 @@ def encode_categorical_data(path:str):
 
     return data
 
-def scale_numeric_data(X:pd.DataFrame, X_train:pd.DataFrame, X_test:pd.DataFrame):
+
+def scale_numeric_data(X: pd.DataFrame, X_train: pd.DataFrame, X_test: pd.DataFrame):
     numeric_features = []
     for col in X.columns:
-        if(X[col].dtype == "float" or X[col].dtype == "int"):
+        if (X[col].dtype == "float" or X[col].dtype == "int"):
             numeric_features.append(col)
     scaler = StandardScaler()
     X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
     X_test[numeric_features] = scaler.fit_transform(X_test[numeric_features])
-
 
 # def undersample_data(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train:pd.DataFrame, y_test:pd.DataFrame):
 #     undersample = RandomUnderSampler(sampling_strategy='majority')
