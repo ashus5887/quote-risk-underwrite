@@ -1,7 +1,5 @@
 import pandas as pd
-from imblearn.under_sampling import RandomUnderSampler
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-
+from sklearn.preprocessing import StandardScaler
 
 def clean_data(path:str, currency_columns:list):
     data = pd.read_csv(path)
@@ -47,9 +45,9 @@ def scale_numeric_data(X:pd.DataFrame, X_train:pd.DataFrame, X_test:pd.DataFrame
     X_test[numeric_features] = scaler.fit_transform(X_test[numeric_features])
 
 
-def undersample_data(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train:pd.DataFrame, y_test:pd.DataFrame):
-    undersample = RandomUnderSampler(sampling_strategy='majority')
-    X_train_resampled, y_train_resampled = undersample.fit_resample(X_train, y_train)
-    X_test_resampled, y_test_resampled = undersample.fit_resample(X_test, y_test)
-
-    return X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled
+# def undersample_data(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train:pd.DataFrame, y_test:pd.DataFrame):
+#     undersample = RandomUnderSampler(sampling_strategy='majority')
+#     X_train_resampled, y_train_resampled = undersample.fit_resample(X_train, y_train)
+#     X_test_resampled, y_test_resampled = undersample.fit_resample(X_test, y_test)
+#
+#     return X_train_resampled, X_test_resampled, y_train_resampled, y_test_resampled
